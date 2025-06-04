@@ -1,14 +1,35 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bitcoin, DollarSign } from 'lucide-react';
 import CryptoCard from '../components/CryptoCard';
 import StatusIndicator from '../components/StatusIndicator';
+import MqttConfigModal from '../components/MqttConfigModal';
 import { useMQTT } from '../hooks/useMQTT';
+import { MqttConfig } from '../types/mqtt';
 
 const Index = () => {
-  const { cryptoData, isConnected, lastUpdate } = useMQTT();
+  const { cryptoData, isConnected, lastUpdate, mqttConfig, updateMqttConfig } = useMQTT();
+  const [showMqttConfig, setShowMqttConfig] = useState(false);
 
   const cryptoOrder = ['BTC', 'ETH', 'SOL', 'BNB', 'XRP', 'LINK', 'ADA'] as const;
+
+  // Versteckte Tastenkombination für MQTT-Konfiguration (Ctrl+M)
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === 'm') {
+        event.preventDefault();
+        setShowMqttConfig(true);
+        console.log('MQTT Configuration modal opened via Ctrl+M');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  const handleMqttConfigSave = (config: MqttConfig) => {
+    updateMqttConfig(config);
+  };
 
   return (
     <div className="min-h-screen bg-crypto-background p-4 lg:p-8">
@@ -24,6 +45,10 @@ const Index = () => {
           <p className="text-gray-400 text-lg">
             Live Kryptowährungen Portfolio mit MQTT Integration
           </p>
+          {/* Versteckter Hinweis für Entwickler */}
+          <div className="text-xs text-gray-600 mt-2 opacity-50">
+            Press Ctrl+M for configuration
+          </div>
         </div>
 
         {/* Status */}
@@ -64,11 +89,18 @@ const Index = () => {
         <div className="text-center mt-12">
           <div className="crypto-gradient rounded-lg px-6 py-4 inline-block">
             <p className="text-gray-400 text-sm">
-              Real-time data via MQTT • Updated every 3 seconds
+              Real-time data via MQTT • Topic: {mqttConfig.topicPrefix}/[SYMBOL]
             </p>
           </div>
         </div>
       </div>
+
+      {/* Hidden MQTT Configuration Modal */}
+      <MqttConfigModal
+        isOpen={showMqttConfig}
+        onClose={() => setShowMqttConfig(false)}
+        onSave={handleMqttConfigSave}
+      />
     </div>
   );
 };
