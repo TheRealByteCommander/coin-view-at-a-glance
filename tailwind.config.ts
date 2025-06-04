@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				crypto: {
+					background: '#0a0b0d',
+					card: '#1a1b23',
+					cardHover: '#252631',
+					profit: '#00ff88',
+					loss: '#ff4757',
+					neutral: '#747d8c',
+					gold: '#ffd700',
+					blue: '#3742fa'
 				}
 			},
 			borderRadius: {
@@ -84,11 +95,47 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-profit': {
+					'0%, 100%': {
+						opacity: '1',
+						boxShadow: '0 0 0 0 rgba(0, 255, 136, 0.7)'
+					},
+					'50%': {
+						opacity: '0.8',
+						boxShadow: '0 0 0 10px rgba(0, 255, 136, 0)'
+					}
+				},
+				'pulse-loss': {
+					'0%, 100%': {
+						opacity: '1',
+						boxShadow: '0 0 0 0 rgba(255, 71, 87, 0.7)'
+					},
+					'50%': {
+						opacity: '0.8',
+						boxShadow: '0 0 0 10px rgba(255, 71, 87, 0)'
+					}
+				},
+				'slide-up': {
+					'0%': {
+						transform: 'translateY(20px)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translateY(0)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-profit': 'pulse-profit 2s infinite',
+				'pulse-loss': 'pulse-loss 2s infinite',
+				'slide-up': 'slide-up 0.5s ease-out'
+			},
+			backdropBlur: {
+				xs: '2px'
 			}
 		}
 	},
