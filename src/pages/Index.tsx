@@ -43,7 +43,7 @@ const Index = () => {
             </h1>
           </div>
           <p className="text-gray-400 text-sm sm:text-base lg:text-lg px-4">
-            Live Kryptowährungen Portfolio mit MQTT Integration
+            the 1. Million Dollar App
           </p>
           {/* Versteckter Hinweis für Entwickler */}
           <div className="text-xs text-gray-600 mt-2 opacity-50 hidden sm:block">
