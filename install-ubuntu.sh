@@ -30,13 +30,16 @@ cd ~/crypto-dashboard
 echo "📦 Installing project dependencies..."
 npm install
 
+# Install Express server dependency
+echo "📦 Installing Express server..."
+npm install express
+
 # Build the application
 echo "🔨 Building the application..."
 npm run build
 
-# Install global serve package for hosting
-echo "📦 Installing serve package globally..."
-sudo npm install -g serve
+# Make start script executable
+chmod +x start.js
 
 # Create systemd service for auto-start
 echo "⚙️ Creating systemd service..."
@@ -49,9 +52,10 @@ After=network.target
 Type=simple
 User=$USER
 WorkingDirectory=$(pwd)
-ExecStart=/usr/bin/npx serve -s dist -l 3000
+ExecStart=/usr/bin/node $(pwd)/start.js
 Restart=always
 RestartSec=10
+Environment=NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
@@ -78,6 +82,15 @@ Terminal=false
 Categories=Office;Finance;
 EOF
 
+# Create start script in user directory
+echo "📝 Creating start script..."
+tee ~/start-crypto-dashboard.sh > /dev/null <<EOF
+#!/bin/bash
+cd ~/crypto-dashboard
+node start.js
+EOF
+chmod +x ~/start-crypto-dashboard.sh
+
 # Install Chrome/Chromium for better PWA support
 echo "🌐 Installing Chromium for PWA support..."
 sudo apt install -y chromium-browser
@@ -90,6 +103,7 @@ echo ""
 echo "Access methods:"
 echo "• Web Browser: http://localhost:3000"
 echo "• Desktop App: Look for 'Crypto Dashboard' in your applications menu"
+echo "• Manual Start: ~/start-crypto-dashboard.sh"
 echo "• Service Status: sudo systemctl status crypto-dashboard"
 echo ""
 echo "For PWA installation:"
@@ -104,3 +118,5 @@ echo "• Start: sudo systemctl start crypto-dashboard"
 echo "• Stop: sudo systemctl stop crypto-dashboard"
 echo "• Restart: sudo systemctl restart crypto-dashboard"
 echo "• Logs: sudo journalctl -u crypto-dashboard -f"
+echo ""
+echo "Standalone start: node start.js (in project directory)"
